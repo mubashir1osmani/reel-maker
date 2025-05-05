@@ -1,0 +1,16 @@
+uvicorn
+litellm
+fastapi
+fastapi[all]
+pydantic
+python-dotenv
+requests
+replicate
+openai
+numpy
+pillow
+diffusers
+transformers
+python-multipart
+ffmpeg-python
+uuid

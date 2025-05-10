@@ -14,3 +14,5 @@ transformers
 python-multipart
 ffmpeg-python
 uuid
+qwen-agent[gui,rag,code_interpreter,mcp]
+openai-agents

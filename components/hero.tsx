@@ -1,54 +1,58 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Navbar from "./nav";
+// import Navbar from "./nav";
 
 export default function Hero() {
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
-  const [textResponse, setTextResponse] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [responseType, setResponseType] = useState<"video" | "text" | null>(null);
+  const [duration, setDuration] = useState<number>(5);
+  const [selectedModel, setSelectedModel] = useState<"runwayml" | "lightricks">("lightricks");
+  const [credits, setCredits] = useState<string>("");
+  const [generatedScript, setGeneratedScript] = useState<string>("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoVolume, setVideoVolume] = useState<number>(100);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
 
   const handleGenerate = async () => {
     setLoading(true);
-    setVideoUrl(""); // Clear previous video
-    setTextResponse(""); // Clear previous text response
-    setResponseType(null);
+    setVideoUrl("");
     setError(null);
+    setCredits("");
+    setGeneratedScript("");
     
     try {
-      const res = await fetch("http://localhost:8000/chat", {
+      const response = await fetch("http://localhost:8000/generate/video", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: topic }),
+        body: JSON.stringify({ 
+          prompt: topic,
+          duration: duration,
+          model: selectedModel
+        }),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        const errorMessage = errorData.detail || res.statusText || "An unknown error occurred";
-        console.error("API Error:", errorMessage);
+      if (!response.ok) {
+        const errorData = await response.json();
+        const errorMessage = errorData.detail || response.statusText || "An unknown error occurred";
+        console.error("Generation Error:", errorMessage);
         setError(`Error: ${errorMessage}`);
         setLoading(false);
         return;
       }
 
-      const data = await res.json();
+      const data = await response.json();
       
-      // Check if the response contains a text_response field (direct text response)
-      if (data.text_response) {
-        setTextResponse(data.text_response);
-        setResponseType("text");
-      } else if (data.video_url) {
-        // It's a video URL
+      if (data.status === "completed" && data.video_url) {
         setVideoUrl(data.video_url);
-        setResponseType("video");
+        setGeneratedScript(data.script);
+        setCredits(data.credits);
+      } else if (data.error) {
+        setError(`Error: ${data.error}`);
       }
     } catch (err) {
       console.error("Request failed:", err);
@@ -78,18 +82,18 @@ export default function Hero() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="container mx-auto px-4 py-6">
-        <div className="text-center mb-6">
+        {/* <div className="text-center mb-6">
           <h1 className="text-4xl font-bold mb-3">
             <span role="img" aria-label="film projector" className="mr-2">🎥</span>
             AI Reel Maker
           </h1>
           <p className="text-lg text-gray-300">Create videos or get detailed text responses from your prompts</p>
-        </div>
+        </div> */}
 
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-5">
+          <div className="text-center mb-15">
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-12 rounded-full text-xl uppercase tracking-wider"
             >
@@ -97,7 +101,6 @@ export default function Hero() {
             </button>
           </div>
           
-          <h2 className="text-2xl font-bold mb-4 px-4">Insert footage / prompt</h2>
           
           <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-220px)] min-h-[500px]">
             {/* Left Column - Prompt and Response */}
@@ -116,6 +119,32 @@ export default function Hero() {
                     disabled={loading}
                   />
                   
+                  <div className="mt-3 mb-3">
+                    <label className="block text-sm text-gray-400 mb-1">Video Duration</label>
+                    <select
+                      value={duration}
+                      onChange={(e) => setDuration(Number(e.target.value))}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      disabled={loading}
+                    >
+                      <option value={5}>5 seconds</option>
+                      <option value={10}>10 seconds</option>
+                    </select>
+                  </div>
+
+                  <div className="mt-3 mb-3">
+                    <label className="block text-sm text-gray-400 mb-1">AI Model</label>
+                    <select
+                      value={selectedModel}
+                      onChange={(e) => setSelectedModel(e.target.value as "runwayml" | "lightricks")}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      disabled={loading}
+                    >
+                      <option value="lightricks">Lightricks (Recommended)</option>
+                      <option value="runwayml">RunwayML</option>
+                    </select>
+                  </div>
+                  
                   <button
                     onClick={handleGenerate}
                     className={`w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center justify-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -127,13 +156,22 @@ export default function Hero() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        {responseType === "video" ? "Generating Video..." : "Processing..."}
+                        Generating Video...
                       </>
                     ) : (
-                      "Generate Response"
+                      "Generate Video"
                     )}
                   </button>
                 </div>
+                
+                {generatedScript && (
+                  <div className="p-4 border-b border-gray-700">
+                    <h4 className="text-gray-300 font-medium mb-2">Generated Script</h4>
+                    <div className="bg-gray-700 rounded-lg p-4">
+                      <p className="text-gray-200 whitespace-pre-wrap">{generatedScript}</p>
+                    </div>
+                  </div>
+                )}
                 
                 {error && (
                   <div className="m-4 p-3 bg-red-900/50 border border-red-800 text-red-200 rounded-lg">
@@ -149,9 +187,9 @@ export default function Hero() {
                 <div className="p-4 flex-grow overflow-auto">
                   <h4 className="text-gray-300 font-medium mb-2">Response</h4>
                   <div className="bg-gray-700 rounded-lg p-4 h-full overflow-auto">
-                    {responseType === "text" && textResponse ? (
+                    {videoUrl ? (
                       <div className="text-gray-200 whitespace-pre-wrap">
-                        {textResponse}
+                        {credits}
                       </div>
                     ) : (
                       <div className="text-gray-400 flex items-center justify-center h-full">
@@ -171,7 +209,7 @@ export default function Hero() {
 
               <div className="p-4 flex-grow flex flex-col">
                 <div className="flex-grow flex items-center justify-center bg-gray-700 rounded-lg overflow-hidden mb-4">
-                  {responseType === "video" && videoUrl ? (
+                  {videoUrl ? (
                     <div className="w-full h-full flex flex-col">
                       <div className="relative rounded-lg overflow-hidden shadow-md flex-grow">
                         <video 
@@ -198,7 +236,7 @@ export default function Hero() {
                 </div>
                 
                 {/* Video Editor Controls */}
-                <div className={`bg-gray-700 rounded-lg p-4 ${responseType === "video" ? "" : "opacity-50"}`}>
+                <div className={`bg-gray-700 rounded-lg p-4 ${videoUrl ? "" : "opacity-50"}`}>
                   <h4 className="text-gray-300 font-medium mb-3">Edit Controls</h4>
                   <div className="space-y-4">
                     <div>
@@ -257,6 +295,7 @@ export default function Hero() {
           
           <div className="mt-6 text-center text-sm text-gray-400">
             <p>Powered by advanced AI models • For demonstration purposes only</p>
+            {credits && <p className="mt-2">{credits}</p>}
           </div>
         </div>
       </div>

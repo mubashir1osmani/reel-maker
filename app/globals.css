@@ -1,16 +1,21 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
 @import "tailwindcss";
 @tailwind utilities;
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 245, 240, 216;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Lilita One', cursive, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,15 +28,9 @@
 body {  
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
-  font-family: Lilita One;
-}
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-rgb: 245, 240, 216;
-}
-
-body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer utilities {

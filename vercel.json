@@ -1,0 +1,7 @@
+{
+    "functions": {
+      "backend/**": {
+        "excludeFiles": "{.next,.git,node_modules}/**"
+      }
+    }
+}

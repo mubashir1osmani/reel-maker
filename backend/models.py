@@ -79,25 +79,6 @@ def model_configs() -> Dict[str, Dict[str, Any]]:
             "temperature": 0.7,
             "max_tokens": 4096,
         },
-        "gpt-4o": {
-                "provider": "openai",
-                "api_key": os.getenv("OPENAI_API_KEY"),
-                "model": "gpt-4-turbo-preview",
-                "temperature": 0.7,
-                "max_tokens": 4096,
-            },
-        "gpt-4.5": {
-            "provider": "openai",
-            "api_key": os.getenv("OPENAI_API_KEY"),
-            "temperature": 0.7,
-            "max_tokens": 4096,
-        },
-        "gemini-2.5-pro": {
-                "provider": "gemini",
-                "api_key": os.getenv("GEMINI_API_KEY"),
-                "temperature": 0.7,
-                "max_tokens": 4096,
-        },
         "luma/ray-flash-2-720p": {
             "api_key": os.getenv("LUMA_API_KEY"),
             "temperature": 0.7,

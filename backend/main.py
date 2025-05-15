@@ -10,10 +10,10 @@ from enum import Enum
 import asyncio
 from openai import OpenAI
 import uvicorn
+from models import system_prompt
 
 load_dotenv()
 
-# API Keys
 openai_api_key = os.getenv("OPENAI_API_KEY")
 llama_api_key = os.getenv("LLAMA_NEMOTRON")
 runway_api_key = os.getenv("RUNWAY_API_KEY")
@@ -21,7 +21,6 @@ lightricks_api_key = os.getenv("LIGHTRICKS_API_KEY")
 
 app = FastAPI()
 
-# CORS (Cross-Origin Resource Sharing)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -36,18 +35,15 @@ client = OpenAI(
 )
 
 class VideoGeneratorModel(str, Enum):
-    """Enum for available video generation models"""
     RUNWAYML = "runwayml"
     LIGHTRICKS = "lightricks"
 
 class VideoRequest(BaseModel):
-    """Request model for video generation"""
     prompt: str
     duration: int = 5
     model: VideoGeneratorModel = VideoGeneratorModel.LIGHTRICKS
 
 class VideoResponse(BaseModel):
-    """Response model for video generation"""
     status: str
     video_url: Optional[str] = None
     script: Optional[str] = None
@@ -55,24 +51,7 @@ class VideoResponse(BaseModel):
     credits: str
 
 async def generate_script(prompt: str, duration: int) -> str:
-    """Generate a script using Llama-3-Nemotron"""
     try:
-        system_prompt = f"""You are a professional video script writer. Create a concise, engaging script for a {duration}-second video.
-Guidelines:
-- Keep it under {duration} seconds when read at a normal pace
-- Make it visually descriptive and suitable for AI video generation
-- Focus on key points that can be visualized
-- Use clear, concise language
-- Avoid complex transitions or effects
-- Keep descriptions simple and direct
-- Format: Write a single paragraph with clear visual descriptions
-- Maximum 500 characters
-Example format:
-"A serene mountain landscape at sunset, with golden light reflecting off snow-capped peaks. A lone hiker silhouetted against the dramatic sky, walking along a winding path. The scene transitions to a close-up of the hiker's determined face, then pans out to show the vast wilderness ahead."
-
-Remember: The script will be used to generate an AI video, so focus on visual elements that can be easily interpreted by the AI model.
-"""
-
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Create a script for: {prompt}"}
@@ -228,7 +207,6 @@ async def generate_runway_video(prompt: str, duration: int) -> dict:
 
 @app.post("/generate/video", response_model=VideoResponse)
 async def generate_video_endpoint(request: VideoRequest):
-    """Generate a video with script"""
     try:
         # Validate duration
         if request.duration not in [5, 10]:

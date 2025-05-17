@@ -3,5 +3,14 @@
       "backend/**": {
         "excludeFiles": "{.next,.git,node_modules}/**"
       }
-    }
+    },
+    "rewrites": [
+      {
+        "source": "/api/backend/:path*",
+        "destination": "/backend/:path*"
+      }
+    ],
+    "buildCommand": "npm run build",
+    "devCommand": "npm run dev",
+    "installCommand": "npm install"
 }

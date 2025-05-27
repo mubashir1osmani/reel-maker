@@ -17,3 +17,4 @@ uuid
 qwen-agent[gui,rag,code_interpreter,mcp]
 openai-agents
 fal-client
+pytest

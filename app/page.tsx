@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 
+
 export default function Home() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">AI Reel Generator</h1>
+        <h1 className="text-4xl font-bold mb-4">AI Animated Video Generator</h1>
         <p className="text-xl text-gray-600">
-          Create professional-quality reels for social media with AI
+          Create professional-quality animated videos with AI
         </p>
       </div>
       
@@ -24,23 +25,23 @@ export default function Home() {
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">Supported Formats</h2>
+          <h2 className="text-2xl font-bold mb-4">What You Get</h2>
           <ul className="list-disc list-inside space-y-3 text-gray-700">
-            <li>Talking Head Avatars</li>
-            <li>Stock Footage with Captions</li>
-            <li>Animated Videos</li>
-            <li>Memes with Captions</li>
-            <li>Voiceover Slideshows</li>
+            <li>High-quality animated videos</li>
+            <li>AI-generated visuals</li>
+            <li>Professional video output</li>
+            <li>Ready for social media sharing</li>
+            <li>MP4 format for universal compatibility</li>
           </ul>
         </div>
       </div>
       
       <div className="text-center">
         <Link 
-          href="/generate" 
+          href="/instagram-reels" 
           className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow-sm transition-colors"
         >
-          Create Your Reel Now
+          Create Your Video Now
         </Link>
       </div>
     </div>

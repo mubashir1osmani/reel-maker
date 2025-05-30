@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, signOut, loading } = useAuth();
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -33,12 +35,31 @@ export default function Navbar() {
             >
               About
             </Link>
-            <Link
-              href="#"
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Try Premium
-            </Link>
+            
+            {!loading && (
+              <>
+                {user ? (
+                  <>
+                    <span className="text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                      {user.email}
+                    </span>
+                    <button
+                      onClick={signOut}
+                      className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    Sign in
+                  </Link>
+                )}
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -113,12 +134,31 @@ export default function Navbar() {
           >
             About
           </Link>
-          <Link
-            href="#"
-            className="block w-full text-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 mt-4"
-          >
-            Try Premium
-          </Link>
+          
+          {!loading && (
+            <>
+              {user ? (
+                <>
+                  <span className="block px-3 py-2 rounded-md text-base font-medium text-gray-700">
+                    {user.email}
+                  </span>
+                  <button
+                    onClick={signOut}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="block w-full text-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 mt-4"
+                >
+                  Sign in
+                </Link>
+              )}
+            </>
+          )}
         </div>
       </div>
     </nav>

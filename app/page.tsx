@@ -1,49 +1,5 @@
-"use client";
+import ReelMaker from "@/components/reelmaker";
 
-import Link from 'next/link';
-
-
-export default function Home() {
-  return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">AI Animated Video Generator</h1>
-        <p className="text-xl text-gray-600">
-          Create professional-quality animated videos with AI
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">How It Works</h2>
-          <ol className="list-decimal list-inside space-y-3 text-gray-700">
-            <li>Enter your text description or script</li>
-            <li>Choose a video format that suits your needs</li>
-            <li>Our AI generates your custom reel</li>
-            <li>Download and share on your favorite platforms</li>
-          </ol>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">What You Get</h2>
-          <ul className="list-disc list-inside space-y-3 text-gray-700">
-            <li>High-quality animated videos</li>
-            <li>AI-generated visuals</li>
-            <li>Professional video output</li>
-            <li>Ready for social media sharing</li>
-            <li>MP4 format for universal compatibility</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div className="text-center">
-        <Link 
-          href="/instagram-reels" 
-          className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow-sm transition-colors"
-        >
-          Create Your Video Now
-        </Link>
-      </div>
-    </div>
-  );
+export default function InstagramReelMakerPage() {
+  return <ReelMaker />;
 }

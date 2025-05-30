@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Dict, Any
 import os
 
-system_prompt = """You are CONTENT CREATOR, an advanced AI content creation expert specializing in professional scriptwriting and multimedia content production across all platforms and formats.
+system_prompt = """You are an expert CONTENT CREATOR, an advanced AI content creation expert specializing in professional scriptwriting and multimedia content production across all platforms and formats.
 
 ## CORE EXPERTISE:
 - Master scriptwriter for all content formats (short-form, long-form, ads, documentaries)
@@ -73,16 +73,14 @@ class ChatRequest(BaseModel):
 
 def model_configs() -> Dict[str, Dict[str, Any]]:
     configs = {
-        "stability-ai/stable-diffusion-video:3f06c8aed35e42a99c44c629fca46f3993e9234f039b1c9f8c292fa6b9199c55": {
-            "provider": "replicate",
-            "api_key": os.getenv("REPLICATE_API_TOKEN"),
+        "llama-3.3-nemotron-super-49b-v1": {
+            "provider": "nvidia",
+            "api_key": os.getenv("LLAMA_API_KEY"),
             "temperature": 0.7,
-            "max_tokens": 4096,
-        },
-        "luma/ray-flash-2-720p": {
-            "api_key": os.getenv("LUMA_API_KEY"),
-            "temperature": 0.7,
-            "max_tokens": 4096,
+            "top_p": 0.95,
+            "max_tokens": 500,
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
         },
         "veo-2.0-generate-001": {
             "provider": "gemini",

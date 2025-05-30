@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt } = await request.json();
+    const { prompt, duration, model } = await request.json();
     
     if (!prompt) {
       return NextResponse.json(
@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({ 
         prompt, 
-        duration: 5, 
-        model: 'lightricks' 
+        duration: duration || 5, 
+        model: model || 'fal_ai' 
       }),
     });
 

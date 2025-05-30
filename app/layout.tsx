@@ -2,6 +2,7 @@ import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
 import { Toaster } from 'sonner'
+import { AuthProvider } from '@/lib/auth-context'
 
 export const metadata: Metadata = {
   title: "AI Animated Video Maker",
@@ -16,11 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans">
-        <main>
-          {children}
-        </main>
-        
-        <Toaster position="top-right" />
+        <AuthProvider>
+          <main>
+            {children}
+          </main>
+          <Toaster position="top-right" />
+        </AuthProvider>
       </body>
     </html>
   )
